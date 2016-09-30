@@ -7,7 +7,7 @@ app = Flask(__name__)
 @app.route("/login/")
 def login():
 	#print request.headers
-	return render_template("dn.html");
+	return render_template("dn.html", errorMsg = "");
 
 @app.route("/authenticate/", methods=['POST'])
 def auth():
@@ -17,6 +17,10 @@ def auth():
                 theVerdict = "successful"
                 theUser = request.form['user']
         return render_template("auth.html", verdict=theVerdict, user=theUser)
+
+@app.route("/register/", methods=['POST'])
+def reg():
+        return render_template("dn.html", errorMsg="(Registration failed. Try again)");
 
 if __name__ == ("__main__"):
 	app.debug = True
