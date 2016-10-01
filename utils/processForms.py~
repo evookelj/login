@@ -1,0 +1,34 @@
+#!/usr/bin/python
+from hashlib import sha1
+
+userInfo = {}
+
+def loadDict():
+        csv = open('data/userPass.csv').read().strip("\n")
+        if (len(csv)==0):
+                return
+        if "\n" in csv: # more than one entry
+                csv = csv.split("\n")
+                for row in csv: 
+                        row = row.split(",")
+                        userInfo[row[0]] = row[1]
+        else:
+                csv = csv.split(",")
+                userInfo[csv[0]] = csv[1]
+
+def login():
+    loadDict()
+
+def authenticate():
+    theVerdict = "a failure."
+    theUser = ""
+    theReason=""
+    user = request.form['user']
+    passHash = sha1(request.form['pass']).hexdigest()
+    if (user in userInfo.keys()):
+        if (passHash == userInfo[user]):
+            theVerdict = "a success!"
+        else:
+            theReason = "Incorrect password entered."
+    else:
+        theReason = "Username does not exist."
