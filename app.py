@@ -31,8 +31,10 @@ def auth():
         theVerdict = "a failure."
         theUser = ""
         theReason=""
-        if (request.form['user'] in userInfo.keys()):
-                if (request.form['pass'] == userInfo[request.form['user']]):
+        user = request.form['user']
+        passHash = sha1(request.form['pass']).hexdigest()
+        if (user in userInfo.keys()):
+                if (passHash == userInfo[user]):
                         theVerdict = "a success!"
                 else:
                         theReason = "Incorrect password entered."
@@ -43,17 +45,20 @@ def auth():
 @app.route("/register/", methods=['POST'])
 def reg():
         theError = ""
-        if (request.form['newUser'] in userInfo.keys()):
+        user = request.form['newUser']
+        passHash = sha1(request.form['newPass']).hexdigest()
+        if (user in userInfo.keys()):
                 print "route1"
                 theError = "This username is already registered."
         else:
                 print "route2"
-                if ("," in request.form['newUser']):
-                        theError = "Password has invalid character (a comma)."
+                if ("," in user):
+                        theError = "Username has invalid character (a comma)."
                 else:
                         with open('data/userPass.csv','a') as csv:
-                                csv.write(request.form['newUser'] + "," + request.form['newPass'] + "\n")
+                                csv.write(user + "," + passHash + "\n")
                                 theError = "Your account was successfully created!"
+                        userInfo[user] = passHash
         return render_template("dn.html", errorMsg=theError)
 
 if __name__ == ("__main__"):
