@@ -3,11 +3,22 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
+userInfo = {}
+
 @app.route("/")
 @app.route("/login/")
 def login():
-	#print request.headers
-	return render_template("dn.html", errorMsg = "");
+        if (len(userInfo)==0):
+                csv = open('data/userPass.csv').read().strip("\n")
+                if "\n" in csv:
+                        csv = csv.split("\n")
+                        for row in csv:
+                                row = row.split(",")
+                                userInfo[row[0]] = row[1]
+                else:
+                        csv = csv.split(",")
+                        userInfo[csv[0]] = csv[1]
+	return render_template("dn.html", errorMsg = "")
 
 @app.route("/authenticate/", methods=['POST'])
 def auth():
@@ -20,7 +31,7 @@ def auth():
 
 @app.route("/register/", methods=['POST'])
 def reg():
-        return render_template("dn.html", errorMsg="(Registration failed. Try again)");
+        return render_template("dn.html", errorMsg="(Registration failed. Try again)")
 
 if __name__ == ("__main__"):
 	app.debug = True
