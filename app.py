@@ -22,12 +22,17 @@ def login():
 
 @app.route("/authenticate/", methods=['POST'])
 def auth():
-        theVerdict = "a failure"
+        theVerdict = "a failure."
         theUser = ""
-        if (request.form['user'] == "emma" and request.form['pass'] == "helloWorld"):
-                theVerdict = "successful"
-                theUser = request.form['user']
-        return render_template("auth.html", verdict=theVerdict, user=theUser)
+        theReason=""
+        if (request.form['user'] in userInfo.keys()):
+                if (request.form['pass'] == userInfo[request.form['user']]):
+                        theVerdict = "a success!"
+                else:
+                        theReason = "Incorrect password entered."
+        else:
+                theReason = "Username does not exist."
+        return render_template("auth.html", verdict=theVerdict, reason=theReason)
 
 @app.route("/register/", methods=['POST'])
 def reg():
