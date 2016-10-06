@@ -1,26 +1,24 @@
 #!/usr/bin/python
-from flask import Flask, render_template, request, url_for, session
+from flask import Flask, render_template, request, url_for, session, redirect
 from hashlib import sha1
 from utils import processForms
+from os import urandom
 
 app = Flask(__name__)
-app.secret_key = 'heyllo'
+app.secret_key = urandom(32)
 
 @app.route("/")
 def home():
         processForms.loadDict()
+        print "LEN: " + str(len(session.keys()))
         if (len(session.keys()) == 0):
                 return redirect( url_for("login"))
-        else:
+        else: #if account exists, go to real home
                 return render_template("home.html", user = session['User'])
 
 @app.route("/login/")
 def login():
-        #redirect( url_for(auth) ) will redirect to correct URL for fxn auth()
-        if (len(session.keys()) == 0):
-                return render_template("dn.html")
-        else:
-                return render_template("home.html", user=session["User"])
+        return render_template("dn.html")
 
 #WITHOUT hash rn
 @app.route("/authenticate/", methods=['POST'])
@@ -28,10 +26,10 @@ def auth():
         retAuth = processForms.authenticate(request.form['user'], request.form['pass'])
         if (retAuth[0]):
                 session["User"] = request.form['user']
-                theVerdict = "a success!"
+                return redirect( url_for("home"))
         else:
                 theVerdict = "a failure"
-        return render_template("auth.html", verdict=theVerdict, reason=retAuth[1])
+        return render_template("dn.html", errorMsg=retAuth[1])
 
 @app.route("/register/", methods=['POST'])
 def reg():
