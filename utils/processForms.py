@@ -17,12 +17,12 @@ def loadDict():
                 userInfo[csv[0]] = csv[1]
 
 def authenticate(user,password):
-    theVerdict = "a failure."
+    theVerdict = False
     theReason=""
     passHash = sha1(password).hexdigest()
     if (user in userInfo.keys()):
         if (passHash == userInfo[user]):
-            theVerdict = "a success!"
+            theVerdict = True
         else:
             theReason = "Incorrect password entered."
     else:
