@@ -35,6 +35,11 @@ def auth():
 def reg():
         return render_template("dn.html", errorMsg=processForms.register(request.form['newUser'],request.form['newPass']))
 
+@app.route("/logout/", methods=['POST'])
+def logout():
+        session.pop('User')
+        return redirect( url_for("home") )
+
 if __name__ == ("__main__"):
 	app.debug = True
 	app.run()
