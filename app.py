@@ -10,7 +10,6 @@ app.secret_key = urandom(32)
 @app.route("/")
 def home():
         processForms.loadDict()
-        print "LEN: " + str(len(session.keys()))
         if (len(session.keys()) == 0):
                 return redirect( url_for("login"))
         else: #if account exists, go to real home
