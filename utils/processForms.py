@@ -33,10 +33,8 @@ def register(user,password):
     theError = ""
     passHash = sha1(password).hexdigest()
     if (user in userInfo.keys()):
-        print "route1"
         theError = "This username is already registered."
     else:
-        print "route2"
         if ("," in user):
             theError = "Username has invalid character (a comma)."
         else:
